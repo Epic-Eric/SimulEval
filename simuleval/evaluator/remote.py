@@ -40,7 +40,13 @@ class RemoteEvaluator:
             self.system_reset()
             while not instance.finish_prediction:
                 self.send_source(instance.send_source(self.source_segment_size))
+                # instance.py line 275 --> inner returns a segment of the latest 500 ms of audio (0-500), (500-1000).
+                # self.send_source updates the server giving the segment data
+                # then stuff happens that i will not worry about
                 output_segment = self.receive_prediction()
+                import pdb
+
+                pdb.set_trace()
                 instance.receive_prediction(output_segment)
             self.evaluator.write_log(instance)
 

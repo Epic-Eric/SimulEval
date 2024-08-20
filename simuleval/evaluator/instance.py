@@ -273,6 +273,7 @@ class SpeechInputInstance(Instance):
         return self.step == len(self.samples)
 
     def send_source(self, segment_size=10):
+        # this function selects the portion of the audio file and sends it to remote
         if self.step == 0:
             self.start_time = time.time()
         assert segment_size >= 1, "instance size has to larger than 1 ms"
@@ -291,6 +292,7 @@ class SpeechInputInstance(Instance):
                 is_finished = False
 
             self.step = min(self.step + num_samples, len(self.samples))
+            # step is basically number of floats it's parsed through at this moment
 
             segment = SpeechSegment(
                 index=self.len_sample_to_ms(self.step),
@@ -304,6 +306,7 @@ class SpeechInputInstance(Instance):
             # Finish reading this audio
             segment = EmptySegment(
                 index=self.len_sample_to_ms(self.step),
+                # len_sample_ms is basically take this many floats and the sample_rate, how many seconds does it take?
                 finished=True,
             )
             self.source_finished_reading = True
